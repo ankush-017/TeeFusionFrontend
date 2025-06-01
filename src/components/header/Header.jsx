@@ -260,7 +260,7 @@ const Header = () => {
                       Profile
                     </NavLink>
                     <NavLink
-                      to="/dashboard/orders"
+                      to="/dashboard/user/orders"
                       onClick={() => setSidebarOpen(false)}
                       className="hover:text-blue-500"
                     >
