@@ -37,7 +37,7 @@ function Orders() {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto overflow-x-hidden">
+    <div className="p-6 mx-auto overflow-x-hidden">
       <h2 className="text-3xl font-bold text-indigo-700 mb-8 text-center">Your Orders</h2>
 
       {orders.length === 0 ? (
