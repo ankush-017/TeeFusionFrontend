@@ -37,14 +37,14 @@ function Orders() {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
+    <div className="p-6 max-w-4xl mx-auto overflow-x-hidden">
       <h2 className="text-3xl font-bold text-indigo-700 mb-8 text-center">Your Orders</h2>
 
       {orders.length === 0 ? (
         <p className="text-center text-gray-500">You haven't placed any orders yet.</p>
       ) : (
         orders.map((order) => (
-          <div key={order._id} className="bg-white border border-gray-200 rounded-xl p-6 mb-6 shadow-md hover:shadow-lg transition">
+          <div key={order._id} className="bg-white border flex-col justify-center items-center border-gray-200 rounded-xl p-6 mb-6 shadow-md hover:shadow-lg transition">
             <div className="flex justify-between items-center mb-2">
               <h3 className="text-lg font-semibold text-indigo-600">Order ID: <span className="text-black">{order._id}</span></h3>
               {getStatusBadge(order.status)}

@@ -48,18 +48,19 @@ const ProductDetail = () => {
     };
 
     return (
-        <div className="max-w-6xl mx-auto px-4 py-8">
+        <div className="max-w-6xl mx-auto px-4 py-8 overflow-x-hidden">
             {/* Product Detail Section */}
             <div className="flex flex-col md:flex-row gap-10 md:items-center justify-center mb-12">
                 {/* Image */}
-                <div className="w-[350px] h-[400px] md:w-[450px] md:h-[500px] flex-shrink-0">
-                    <img
-                        src={product.photo}
-                        alt={product.name}
-                        className="w-full h-full object-cover rounded-lg shadow-md"
-                    />
+                <div className="flex items-center justify-center">
+                    <div className="w-[320px] h-[400px] md:w-[450px] md:h-[500px] flex-shrink-0">
+                        <img
+                            src={product.photo}
+                            alt={product.name}
+                            className="w-full h-full object-cover rounded-lg shadow-md"
+                        />
+                    </div>
                 </div>
-
                 {/* Product Info */}
                 <div className="flex-1 max-w-xl flex flex-col justify-center h-full">
                     <h1 className="text-2xl font-bold text-gray-800 mb-3">{product.name}</h1>
