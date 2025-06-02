@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { useDispatch , useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../slice/authSlice';
 
 function Register() {
@@ -15,7 +15,7 @@ function Register() {
         address: '',
     });
 
-    const isDark = useSelector((state)=> state.Theme.dark);
+    const isDark = useSelector((state) => state.Theme.dark);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -37,7 +37,7 @@ function Register() {
             if (response && response.data.success) {
                 localStorage.setItem('authToken', response.data.token);
                 const userInfo = response.data.user;
-                localStorage.setItem('user', JSON.stringify({name: userInfo.name,userId: userInfo._id,role: userInfo.role}));
+                localStorage.setItem('user', JSON.stringify({ name: userInfo.name, userId: userInfo._id, role: userInfo.role }));
                 toast.success(response.data && response.data.message);
                 // Dispatch login to Redux
                 dispatch(login({
@@ -55,6 +55,9 @@ function Register() {
         }
     };
 
+    useEffect(() => {
+        window.scrollTo(0, 0); // scroll to top
+    }, []);
 
     return (
         <div className={`min-h-screen flex flex-col ${isDark ? 'bg-gradient-to-br from-blue-50 to-gray-900 text-white' : 'bg-gradient-to-br from-blue-50 to-blue-100 text-black'}`}>

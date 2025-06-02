@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import axios from 'axios';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { useSelector } from 'react-redux';
 
 export default function ForgotPassword() {
 
-    const isDark = useSelector((state)=> state.Theme.dark);
+    const isDark = useSelector((state) => state.Theme.dark);
     const [step, setStep] = useState(1);
     const [email, setEmail] = useState('');
     const [otp, setOtp] = useState('');
@@ -110,157 +110,161 @@ export default function ForgotPassword() {
         }
     };
 
+    useEffect(() => {
+        window.scrollTo(0, 0); // scroll to top
+    }, []);
+
     return (
         <div className={`${isDark ? 'bg-black text-white' : 'bg-white text-black'} pt-10 pb-10`}>
-        <div className={`max-w-md mx-auto min-h-[70vh] p-6 border rounded-lg shadow-md ${isDark ? 'bg-black text-white' : 'bg-white text-gray-800'}`}>
-            <h2 className="text-2xl font-bold mb-6 text-center ">Forgot Password</h2>
+            <div className={`max-w-md mx-auto min-h-[70vh] p-6 border rounded-lg shadow-md ${isDark ? 'bg-black text-white' : 'bg-white text-gray-800'}`}>
+                <h2 className="text-2xl font-bold mb-6 text-center ">Forgot Password</h2>
 
-            {step === 1 && (
-                <div className="space-y-4">
-                    <div>
-                        <label htmlFor="email" className="block text-sm font-medium mb-1">
-                            Email Address
-                        </label>
-                        <input
-                            id="email"
-                            type="email"
-                            placeholder="Enter your registered email"
-                            className="w-full border text-gray-900 px-4 py-2 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                    </div>
-                    <button
-                        onClick={handleSendOtp}
-                        disabled={isLoading}
-                        className={`w-full py-2 px-4 rounded-md text-white font-medium ${isLoading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'
-                            }`}
-                    >
-                        {isLoading ? 'Sending OTP...' : 'Send OTP'}
-                    </button>
-                </div>
-            )}
-
-            {step === 2 && (
-                <div className="space-y-4">
-                    <p className="text-sm text-gray-600">
-                        We've sent a 6-digit OTP to <span className="font-semibold">{email}</span>
-                    </p>
-                    <div>
-                        <label htmlFor="otp" className="block text-sm font-medium text-gray-700 mb-1">
-                            OTP Code
-                        </label>
-                        <input
-                            id="otp"
-                            type="text"
-                            placeholder="Enter 6-digit OTP"
-                            maxLength={6}
-                            className="w-full border border-gray-300 text-gray-900 px-4 py-2 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                            value={otp}
-                            onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
-                        />
-                    </div>
-                    <button
-                        onClick={handleVerifyOtp}
-                        disabled={isLoading}
-                        className={`w-full py-2 px-4 rounded-md text-white font-medium ${isLoading ? 'bg-green-400' : 'bg-green-600 hover:bg-green-700'
-                            }`}
-                    >
-                        {isLoading ? 'Verifying...' : 'Verify OTP'}
-                    </button>
-                    <button
-                        onClick={() => {
-                            setStep(1);
-                            setMessage({ text: '', type: '' });
-                        }}
-                        className="text-sm text-blue-600 hover:underline"
-                    >
-                        Change Email
-                    </button>
-                </div>
-            )}
-
-            {step === 3 && (
-                <div className="space-y-4">
-                    <div>
-                        <label htmlFor="newPassword" className="block text-sm font-medium mb-1">
-                            New Password
-                        </label>
-                        <div className="relative">
+                {step === 1 && (
+                    <div className="space-y-4">
+                        <div>
+                            <label htmlFor="email" className="block text-sm font-medium mb-1">
+                                Email Address
+                            </label>
                             <input
-                                id="newPassword"
-                                type={showPassword.new ? "text" : "password"}
-                                placeholder="Enter new password (min 8 characters)"
-                                className="w-full border text-gray-900 border-gray-300 px-4 py-2 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pr-10"
-                                value={newPassword}
-                                onChange={(e) => setNewPassword(e.target.value)}
+                                id="email"
+                                type="email"
+                                placeholder="Enter your registered email"
+                                className="w-full border text-gray-900 px-4 py-2 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                             />
-                            <button
-                                type="button"
-                                className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                                onClick={() => setShowPassword(prev => ({ ...prev, new: !prev.new }))}
-                            >
-                                {showPassword.new ? (
-                                    <EyeSlashIcon className="h-5 w-5 text-gray-500" />
-                                ) : (
-                                    <EyeIcon className="h-5 w-5 text-gray-500" />
-                                )}
-                            </button>
                         </div>
+                        <button
+                            onClick={handleSendOtp}
+                            disabled={isLoading}
+                            className={`w-full py-2 px-4 rounded-md text-white font-medium ${isLoading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'
+                                }`}
+                        >
+                            {isLoading ? 'Sending OTP...' : 'Send OTP'}
+                        </button>
                     </div>
+                )}
 
-                    <div>
-                        <label htmlFor="confirmPassword" className="block text-sm font-medium mb-1">
-                            Confirm Password
-                        </label>
-                        <div className="relative">
+                {step === 2 && (
+                    <div className="space-y-4">
+                        <p className="text-sm text-gray-600">
+                            We've sent a 6-digit OTP to <span className="font-semibold">{email}</span>
+                        </p>
+                        <div>
+                            <label htmlFor="otp" className="block text-sm font-medium text-gray-700 mb-1">
+                                OTP Code
+                            </label>
                             <input
-                                id="confirmPassword"
-                                type={showPassword.confirm ? "text" : "password"}
-                                placeholder="Confirm your new password"
-                                className="w-full text-gray-900 border border-gray-300 px-4 py-2 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pr-10"
-                                value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                id="otp"
+                                type="text"
+                                placeholder="Enter 6-digit OTP"
+                                maxLength={6}
+                                className="w-full border border-gray-300 text-gray-900 px-4 py-2 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                value={otp}
+                                onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
                             />
-                            <button
-                                type="button"
-                                className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                                onClick={() => setShowPassword(prev => ({ ...prev, confirm: !prev.confirm }))}
-                            >
-                                {showPassword.confirm ? (
-                                    <EyeSlashIcon className="h-5 w-5 text-gray-500" />
-                                ) : (
-                                    <EyeIcon className="h-5 w-5 text-gray-500" />
-                                )}
-                            </button>
                         </div>
+                        <button
+                            onClick={handleVerifyOtp}
+                            disabled={isLoading}
+                            className={`w-full py-2 px-4 rounded-md text-white font-medium ${isLoading ? 'bg-green-400' : 'bg-green-600 hover:bg-green-700'
+                                }`}
+                        >
+                            {isLoading ? 'Verifying...' : 'Verify OTP'}
+                        </button>
+                        <button
+                            onClick={() => {
+                                setStep(1);
+                                setMessage({ text: '', type: '' });
+                            }}
+                            className="text-sm text-blue-600 hover:underline"
+                        >
+                            Change Email
+                        </button>
                     </div>
+                )}
 
-                    <button
-                        onClick={handleResetPassword}
-                        disabled={isLoading}
-                        className={`w-full py-2 px-4 rounded-md text-white font-medium ${isLoading ? 'bg-purple-400' : 'bg-purple-600 hover:bg-purple-700'
+                {step === 3 && (
+                    <div className="space-y-4">
+                        <div>
+                            <label htmlFor="newPassword" className="block text-sm font-medium mb-1">
+                                New Password
+                            </label>
+                            <div className="relative">
+                                <input
+                                    id="newPassword"
+                                    type={showPassword.new ? "text" : "password"}
+                                    placeholder="Enter new password (min 8 characters)"
+                                    className="w-full border text-gray-900 border-gray-300 px-4 py-2 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pr-10"
+                                    value={newPassword}
+                                    onChange={(e) => setNewPassword(e.target.value)}
+                                />
+                                <button
+                                    type="button"
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                                    onClick={() => setShowPassword(prev => ({ ...prev, new: !prev.new }))}
+                                >
+                                    {showPassword.new ? (
+                                        <EyeSlashIcon className="h-5 w-5 text-gray-500" />
+                                    ) : (
+                                        <EyeIcon className="h-5 w-5 text-gray-500" />
+                                    )}
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label htmlFor="confirmPassword" className="block text-sm font-medium mb-1">
+                                Confirm Password
+                            </label>
+                            <div className="relative">
+                                <input
+                                    id="confirmPassword"
+                                    type={showPassword.confirm ? "text" : "password"}
+                                    placeholder="Confirm your new password"
+                                    className="w-full text-gray-900 border border-gray-300 px-4 py-2 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pr-10"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                />
+                                <button
+                                    type="button"
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                                    onClick={() => setShowPassword(prev => ({ ...prev, confirm: !prev.confirm }))}
+                                >
+                                    {showPassword.confirm ? (
+                                        <EyeSlashIcon className="h-5 w-5 text-gray-500" />
+                                    ) : (
+                                        <EyeIcon className="h-5 w-5 text-gray-500" />
+                                    )}
+                                </button>
+                            </div>
+                        </div>
+
+                        <button
+                            onClick={handleResetPassword}
+                            disabled={isLoading}
+                            className={`w-full py-2 px-4 rounded-md text-white font-medium ${isLoading ? 'bg-purple-400' : 'bg-purple-600 hover:bg-purple-700'
+                                }`}
+                        >
+                            {isLoading ? 'Resetting...' : 'Reset Password'}
+                        </button>
+                    </div>
+                )}
+
+                {message.text && (
+                    <div
+                        className={`mt-4 p-3 rounded-md text-sm ${message.type === 'error' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'
                             }`}
                     >
-                        {isLoading ? 'Resetting...' : 'Reset Password'}
-                    </button>
+                        {message.text}
+                    </div>
+                )}
+                <div className="mt-4 text-center">
+                    <a href="/login" className="text-sm text-blue-600 hover:underline">
+                        Back to Login
+                    </a>
                 </div>
-            )}
-
-            {message.text && (
-                <div
-                    className={`mt-4 p-3 rounded-md text-sm ${message.type === 'error' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'
-                        }`}
-                >
-                    {message.text}
-                </div>
-            )}
-            <div className="mt-4 text-center">
-                <a href="/login" className="text-sm text-blue-600 hover:underline">
-                    Back to Login
-                </a>
             </div>
-        </div>
         </div>
     );
 }

@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { useDispatch , useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../slice/authSlice';
 
 const Login = () => {
 
-    const isDark = useSelector((state)=> state.Theme.dark);
+    const isDark = useSelector((state) => state.Theme.dark);
     const [formData, setFormData] = useState({ email: '', password: '' });
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -30,10 +30,10 @@ const Login = () => {
             if (response.data.success) {
                 // Save both to localStorage safely
                 const userInfo = response.data.user;
-                localStorage.setItem('user', JSON.stringify({name: userInfo.name, userId: userInfo._id,role: userInfo.role}));
+                localStorage.setItem('user', JSON.stringify({ name: userInfo.name, userId: userInfo._id, role: userInfo.role }));
                 localStorage.setItem('authToken', response.data.token);
                 toast.success(response && response.data.message);
-                
+
                 dispatch(login({
                     user: response.data.user,
                     token: response.data.token,
@@ -44,7 +44,8 @@ const Login = () => {
             } else {
                 toast.error(response.data.message || 'Login failed');
             }
-        } catch (err) {
+        }
+        catch (err) {
             if (err.response && err.response.data && err.response.data.message) {
                 toast.error(err.response.data.message);
             } else {
@@ -52,6 +53,10 @@ const Login = () => {
             }
         }
     };
+
+    useEffect(() => {
+        window.scrollTo(0, 0); // scroll to top
+    }, []);
 
     const handleForgotPassword = () => {
         navigate('/forgotpassword');

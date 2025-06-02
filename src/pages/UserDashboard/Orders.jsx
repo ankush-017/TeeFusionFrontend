@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 
 function Orders() {
 
-  const isDark = useSelector((state)=> state.Theme.dark);
+  const isDark = useSelector((state) => state.Theme.dark);
   const [orders, setOrders] = useState([]);
   const token = localStorage.getItem("authToken");
 
@@ -20,6 +20,9 @@ function Orders() {
       console.error("Failed to fetch orders", err);
     }
   };
+  useEffect(() => {
+    window.scrollTo(0, 0); // scroll to top
+  }, []);
 
   useEffect(() => {
     getOrders();
@@ -49,7 +52,7 @@ function Orders() {
         orders.map((order) => (
           <div key={order._id} className={`${isDark ? 'bg-black text-white' : 'bg-white text-gray-800'} border flex-col justify-center items-center border-gray-200 rounded-xl p-6 mb-6 shadow-md hover:shadow-lg transition`}>
             <div className="flex flex-wrap justify-between items-center mb-2">
-              <h3 className="md:text-lg text-[14px] font-semibold text-indigo-600">Order ID: <span className="text-black">{order._id}</span></h3>
+              <h3 className="md:text-lg text-[14px] font-semibold text-indigo-600">Order ID: <span className={`${isDark ? 'bg-black text-white' : 'bg-white text-gray-800'}`}>{order._id}</span></h3>
               {getStatusBadge(order.status)}
             </div>
 
@@ -75,7 +78,7 @@ function Orders() {
               </ul>
             </div>
 
-            <p className="text-xs text-gray-500 mt-3 text-right">
+            <p className="text-xs mt-3 text-right">
               Placed on: {new Date(order.createdAt).toLocaleString()}
             </p>
           </div>
