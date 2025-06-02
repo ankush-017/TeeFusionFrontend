@@ -4,10 +4,13 @@ import axios from 'axios';
 import { Select, Button, Spin } from "antd";
 import UseDropzone from '../../components/UploadImageUI/UseDropZone';
 import TextArea from 'antd/es/input/TextArea';
+import { useSelector } from 'react-redux';
 
 const { Option } = Select;
 
 function CreateProduct() {
+
+  const isDark = useSelector((state) => state.Theme.dark);
   const [categories, setCategories] = useState([]);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -82,7 +85,7 @@ function CreateProduct() {
   }, []);
 
   return (
-    <div className="space-y-4 p-4">
+    <div className={`space-y-4 p-4 ${isDark ? 'bg-black text-white' : 'bg-white text-black'}`}>
       <h2 className="text-xl font-semibold">Create New Product</h2>
 
       <Select
@@ -107,7 +110,7 @@ function CreateProduct() {
         placeholder="Product Name"
         value={name}
         onChange={(e) => setName(e.target.value)}
-        className="w-full p-2 border rounded"
+        className="w-full p-2 text-gray-800 border rounded"
       />
 
       <TextArea
@@ -115,7 +118,7 @@ function CreateProduct() {
         placeholder="Product Description"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
-        className="w-full"
+        className="w-full text-gray-800"
       />
 
       <input
@@ -123,7 +126,7 @@ function CreateProduct() {
         placeholder="Price"
         value={price}
         onChange={(e) => setPrice(e.target.value)}
-        className="w-full p-2 border rounded"
+        className="w-full p-2 text-gray-800 border rounded"
       />
 
       <input
@@ -131,7 +134,7 @@ function CreateProduct() {
         placeholder="Quantity"
         value={quantity}
         onChange={(e) => setQuantity(e.target.value)}
-        className="w-full p-2 border rounded"
+        className="w-full text-gray-800 p-2 border rounded"
       />
 
       <Select

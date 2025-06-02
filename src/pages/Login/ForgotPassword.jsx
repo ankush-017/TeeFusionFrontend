@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+import { useSelector } from 'react-redux';
 
 export default function ForgotPassword() {
+
+    const isDark = useSelector((state)=> state.Theme.dark);
     const [step, setStep] = useState(1);
     const [email, setEmail] = useState('');
     const [otp, setOtp] = useState('');
@@ -108,20 +111,21 @@ export default function ForgotPassword() {
     };
 
     return (
-        <div className="max-w-md mx-auto mt-10 mb-5 min-h-[70vh] p-6 border rounded-lg shadow-md bg-white">
-            <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Forgot Password</h2>
+        <div className={`${isDark ? 'bg-black text-white' : 'bg-white text-black'} pt-10 pb-10`}>
+        <div className={`max-w-md mx-auto min-h-[70vh] p-6 border rounded-lg shadow-md ${isDark ? 'bg-black text-white' : 'bg-white text-gray-800'}`}>
+            <h2 className="text-2xl font-bold mb-6 text-center ">Forgot Password</h2>
 
             {step === 1 && (
                 <div className="space-y-4">
                     <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                        <label htmlFor="email" className="block text-sm font-medium mb-1">
                             Email Address
                         </label>
                         <input
                             id="email"
                             type="email"
                             placeholder="Enter your registered email"
-                            className="w-full border border-gray-300 px-4 py-2 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            className="w-full border text-gray-900 px-4 py-2 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
@@ -151,7 +155,7 @@ export default function ForgotPassword() {
                             type="text"
                             placeholder="Enter 6-digit OTP"
                             maxLength={6}
-                            className="w-full border border-gray-300 px-4 py-2 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            className="w-full border border-gray-300 text-gray-900 px-4 py-2 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             value={otp}
                             onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
                         />
@@ -179,7 +183,7 @@ export default function ForgotPassword() {
             {step === 3 && (
                 <div className="space-y-4">
                     <div>
-                        <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-1">
+                        <label htmlFor="newPassword" className="block text-sm font-medium mb-1">
                             New Password
                         </label>
                         <div className="relative">
@@ -187,7 +191,7 @@ export default function ForgotPassword() {
                                 id="newPassword"
                                 type={showPassword.new ? "text" : "password"}
                                 placeholder="Enter new password (min 8 characters)"
-                                className="w-full border border-gray-300 px-4 py-2 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pr-10"
+                                className="w-full border text-gray-900 border-gray-300 px-4 py-2 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pr-10"
                                 value={newPassword}
                                 onChange={(e) => setNewPassword(e.target.value)}
                             />
@@ -206,7 +210,7 @@ export default function ForgotPassword() {
                     </div>
 
                     <div>
-                        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
+                        <label htmlFor="confirmPassword" className="block text-sm font-medium mb-1">
                             Confirm Password
                         </label>
                         <div className="relative">
@@ -214,7 +218,7 @@ export default function ForgotPassword() {
                                 id="confirmPassword"
                                 type={showPassword.confirm ? "text" : "password"}
                                 placeholder="Confirm your new password"
-                                className="w-full border border-gray-300 px-4 py-2 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pr-10"
+                                className="w-full text-gray-900 border border-gray-300 px-4 py-2 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pr-10"
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                             />
@@ -256,6 +260,7 @@ export default function ForgotPassword() {
                     Back to Login
                 </a>
             </div>
+        </div>
         </div>
     );
 }

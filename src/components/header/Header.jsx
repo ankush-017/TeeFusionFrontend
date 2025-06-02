@@ -6,8 +6,12 @@ import { toast } from 'react-toastify';
 import SearchInput from '../SearchInput';
 import { Badge } from 'antd';
 import { BsMenuButtonWide } from "react-icons/bs";
+import { MdDarkMode, MdLightMode } from "react-icons/md";
+import { toggleTheme } from '../../slice/darkTheme';
 
 const Header = () => {
+
+  const isDark = useSelector((state) => state.Theme.dark);
 
   const [isOpen, setIsOpen] = useState(false);
   const cartItem = useSelector((state) => state.cart.cartItem);
@@ -52,27 +56,51 @@ const Header = () => {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 flex md:flex-row flex-col justify-between items-center px-6 py-4 shadow-md bg-white rounded-b-xl">
+      <nav className={`sticky top-0 z-50 flex md:flex-row flex-col justify-between items-center px-6 py-4
+  ${isDark ? 'bg-black text-white shadow-[0_2px_4px_rgba(255,255,255,0.5)]' : 'bg-white text-black shadow-[0_2px_4px_rgba(0,0,0,0.5)]'}`}>
         <div className="text-2xl font-bold flex flex-row justify-between w-full md:w-0 mb-2 text-blue-600">
           <div>
             <Link to="/" className='text-[28px]'>TeeFusion</Link>
           </div>
-
-          <div className='flex lg:hidden flex-row gap-5 mt-1'>
+          <div className='flex md:hidden flex-row gap-5 mt-1'>
             {/* Dark mode icon kept but non-functional per your request */}
-            <div>
-              {/* <MdDarkMode size={30} /> */}
+            <div onClick={() => dispatch(toggleTheme())} className="cursor-pointer">
+              {isDark ? (
+                <MdLightMode size={30} className="text-yellow-300" />
+              ) : (
+                <MdDarkMode size={30} className="text-gray-800" />
+              )}
             </div>
 
             {/* Menu button */}
             <div id="menu-button" onClick={() => setSidebarOpen(true)} className="cursor-pointer">
-              <BsMenuButtonWide size={30} />
+              <BsMenuButtonWide size={30} className='text-blue-600' />
             </div>
           </div>
         </div>
 
-        <div>
+        <div className='text-gray-800'>
           <SearchInput />
+        </div>
+
+        <div className="flex-row gap-5 mt-1">
+          {/* Dark mode icon */}
+          <div onClick={() => dispatch(toggleTheme())} className="cursor-pointer hidden md:flex">
+            {isDark ? (
+              <MdLightMode size={30} className="text-yellow-300" />
+            ) : (
+              <MdDarkMode size={30} className="text-gray-800" />
+            )}
+          </div>
+
+          {/* Menu button */}
+          <div id="menu-button" onClick={() => setSidebarOpen(true)} className="cursor-pointer hidden md:flex lg:hidden">
+            {isDark ? (
+              <BsMenuButtonWide size={30} className="text-blue-600" />
+            ) : (
+              <BsMenuButtonWide size={30} className="text-blue-600" />
+            )}
+          </div>
         </div>
 
         <ul className="lg:flex hidden gap-6 mr-4 flex-wrap text-lg font-medium items-center">
@@ -118,8 +146,8 @@ const Header = () => {
                 className={({ isActive }) =>
                   `inline-block text-lg border-b-2 transition duration-200 ${isActive
                     ? 'text-blue-600 border-blue-600'
-                    : 'text-gray-700 border-transparent hover:text-blue-500'
-                  }`
+                    : 'border-transparent hover:text-blue-500'
+                  } ${isDark ? 'bg-black text-white' : 'bg-white text-black'}`
                 }
               >
                 Cart
@@ -178,9 +206,11 @@ const Header = () => {
       {/* Mobile Sidebar */}
       <div
         id="mobile-sidebar"
-        className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg z-50 transform transition-transform duration-300 ease-in-out
-          ${sidebarOpen ? 'translate-x-0' : 'translate-x-full'}`}
+        className={`fixed top-0 right-0 h-full w-64 shadow-lg z-50 transform transition-transform duration-300 ease-in-out
+    ${isDark ? 'bg-black text-white' : 'bg-white text-black'}
+    ${sidebarOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
+
         <div className="flex justify-between items-center px-6 py-4 border-b">
           <h2 className="text-xl font-bold text-blue-600">Menu</h2>
           <button
@@ -243,10 +273,10 @@ const Header = () => {
                 >
                   Dashboard ▾
                 </button>
-                {dashboardOpen && (
+                {dashboardOpen && user?.role !== 1 && (
                   <div className="ml-4 mt-2 flex flex-col space-y-2 text-base">
                     <NavLink
-                      to={`/dashboard/${user?.role === 1 ? 'admin' : 'user'}`}
+                      to={`/dashboard/user`}
                       onClick={() => setSidebarOpen(false)}
                       className="hover:text-blue-500"
                     >
@@ -265,6 +295,45 @@ const Header = () => {
                       className="hover:text-blue-500"
                     >
                       Orders
+                    </NavLink>
+                  </div>
+                )}
+                {dashboardOpen && user?.role === 1 && (
+                  <div className="ml-4 mt-2 flex flex-col space-y-2 text-base">
+                    <NavLink
+                      to={`/dashboard/admin/create-category`}
+                      onClick={() => setSidebarOpen(false)}
+                      className="hover:text-blue-500"
+                    >
+                      Create Category
+                    </NavLink>
+                    <NavLink
+                      to="/dashboard/admin/create-product"
+                      onClick={() => setSidebarOpen(false)}
+                      className="hover:text-blue-500"
+                    >
+                      Create Product
+                    </NavLink>
+                    <NavLink
+                      to="/dashboard/admin/product"
+                      onClick={() => setSidebarOpen(false)}
+                      className="hover:text-blue-500"
+                    >
+                      Products
+                    </NavLink>
+                    <NavLink
+                      to="/dashboard/admin/adminorder"
+                      onClick={() => setSidebarOpen(false)}
+                      className="hover:text-blue-500"
+                    >
+                      Orders
+                    </NavLink>
+                    <NavLink
+                      to="/dashboard/admin/user"
+                      onClick={() => setSidebarOpen(false)}
+                      className="hover:text-blue-500"
+                    >
+                      Users
                     </NavLink>
                   </div>
                 )}
@@ -294,7 +363,7 @@ const Header = () => {
         </nav>
       </div>
 
-      {/* Optional: Overlay when sidebar is open */}
+      {/* Overlay when sidebar is open */}
       {sidebarOpen && (
         <div
           onClick={() => setSidebarOpen(false)}

@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../slice/authSlice';
 
 function Profile() {
+
+  const isDark = useSelector((state)=> state.Theme.dark);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -122,7 +124,7 @@ function Profile() {
   // Inside Profile.jsx (only JSX updated below your logic)
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-200 via-yellow-100 to-yellow-100  flex items-center justify-center px-4">
-      <div className="w-full max-w-lg  bg-white/80 backdrop-blur-md rounded-3xl shadow-2xl p-10">
+      <div className={`w-full max-w-lg ${isDark ? 'bg-black text-white' : 'bg-white text-gray-800'} backdrop-blur-md rounded-3xl shadow-2xl p-10`}>
         <h2 className="text-3xl font-bold text-center text-indigo-700 mb-6">
           ✨ Update Profile
         </h2>
@@ -137,7 +139,7 @@ function Profile() {
               placeholder={
                 field.charAt(0).toUpperCase() + field.slice(1).replace("phone", "Phone Number")
               }
-              className={`w-full px-4 py-3 border border-gray-300 rounded-lg placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${field === "email" ? "bg-gray-100 cursor-not-allowed" : ""
+              className={`w-full px-4 py-3 border border-gray-300 text-gray-800 rounded-lg placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${field === "email" ? "bg-gray-100 cursor-not-allowed" : ""
                 }`}
               disabled={field === "email"}
               required={field !== "password" && field !== "email"}

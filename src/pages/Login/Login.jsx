@@ -3,11 +3,12 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch , useSelector} from 'react-redux';
 import { login } from '../../slice/authSlice';
 
 const Login = () => {
 
+    const isDark = useSelector((state)=> state.Theme.dark);
     const [formData, setFormData] = useState({ email: '', password: '' });
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -57,9 +58,9 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-[76vh] flex flex-col bg-gradient-to-br from-blue-50 to-blue-100">
+        <div className={`min-h-[76vh] flex flex-col ${isDark ? 'bg-gradient-to-br from-blue-50 to-gray-900 text-white' : 'bg-gradient-to-br from-blue-50 to-blue-100 text-black'}`}>
             <div className="flex-grow flex items-center justify-center px-4 py-10">
-                <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 md:p-12">
+                <div className={`w-full max-w-md ${isDark ? 'bg-black text-white' : 'bg-white text-black'} rounded-2xl shadow-2xl p-8 md:p-12`}>
                     <h2 className="text-3xl font-bold text-center text-blue-700 mb-8">
                         Login to TeeFusion
                     </h2>
@@ -71,7 +72,7 @@ const Login = () => {
                             value={formData.email}
                             onChange={handleChange}
                             placeholder="Email Address"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-4 py-3 text-gray-800 border border-gray-300 rounded-lg placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             required
                         />
                         <input
@@ -80,7 +81,7 @@ const Login = () => {
                             value={formData.password}
                             onChange={handleChange}
                             placeholder="Password"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-4 py-3 text-gray-800 border border-gray-300 rounded-lg placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             required
                         />
 

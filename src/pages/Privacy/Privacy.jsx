@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import privacyImg from '../../assets/Image/privacyImg.png'
+import {useSelector} from 'react-redux';
 
 function Privacy() {
 
@@ -7,13 +8,15 @@ function Privacy() {
     window.scrollTo(0, 0);
   }, []);
 
+  const isDark = useSelector((state)=> state.Theme.dark);
+
   return (
     <>
-      <div className='min-h-[80vh] flex justify-center items-center'>
+      <div className={`min-h-[80vh] flex justify-center items-center ${isDark ? 'bg-black text-white' : 'bg-white text-black'}`}>
         <div className="max-w-6xl mx-auto px-6 py-12">
           <div className="flex flex-col md:flex-row items-center gap-10">
             {/* LEFT: Privacy Policy Text */}
-            <div className="flex-1 text-gray-800">
+            <div className="flex-1">
               <h1 className="text-4xl font-bold text-blue-600 mb-6">
                 Privacy Policy
               </h1>
@@ -48,7 +51,7 @@ function Privacy() {
                 <span className="text-blue-600 underline"> support@teefusion.com</span>.
               </p>
 
-              <p className="text-sm text-gray-500 mt-6">
+              <p className="text-sm mt-6">
                 Last updated: April 2025
               </p>
             </div>

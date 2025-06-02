@@ -5,13 +5,14 @@ import { Prices } from '../../components/Prices';
 import { MdOutlineAddShoppingCart } from "react-icons/md";
 import { Spin } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FaFilter } from "react-icons/fa";
 import { addToCart } from '../../slice/cartSlice';
 
 
 function Home() {
 
+  const isDark = useSelector((state) => state.Theme.dark);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [products, setProduct] = useState([]);
@@ -134,12 +135,12 @@ function Home() {
 
 
   return (
-    <div className="w-full mx-auto mt-2 p-6">
+    <div className={`w-full mx-auto p-6 ${isDark ? 'bg-black text-white' : 'bg-white text-black'}`}>
       <div className="flex flex-col md:flex-row gap-6">
         {/* Filter Sidebar */}
-        <div className="bg-white shadow p-4 h-screen rounded-lg min-w-[200px] md:w-[200px] md:flex hidden flex-col border flex-shrink-0">
+        <div className={`${isDark ? 'bg-black text-white' : 'bg-white text-black'} shadow p-4 h-screen rounded-lg min-w-[200px] md:w-[200px] md:flex hidden flex-col border flex-shrink-0`}>
           {/* Filter by Category */}
-          <h2 className="text-[16px] font-semibold mb-3 text-gray-800">🧩 Filter by Category</h2>
+          <h2 className="text-[16px] font-semibold mb-3">🧩 Filter by Category</h2>
           {categories.map((cat) => (
             <div key={cat._id} className="mb-2">
               <label className="inline-flex items-center cursor-pointer">
@@ -149,13 +150,13 @@ function Home() {
                   checked={checked.includes(cat._id)}
                   onClick={(e) => handleFilter(e.target.checked, cat._id)}
                 />
-                <span className="ml-2 text-sm text-gray-700">{cat.name}</span>
+                <span className="ml-2 text-sm">{cat.name}</span>
               </label>
             </div>
           ))}
 
           {/* Filter by Price */}
-          <h2 className="text-[16px] font-semibold mb-3 mt-4 text-gray-800">💰 Filter by Price</h2>
+          <h2 className="text-[16px] font-semibold mb-3 mt-4">💰 Filter by Price</h2>
           {Prices.map((p) => (
             <div key={p._id} className="mb-2">
               <label className="inline-flex items-center cursor-pointer">
@@ -169,7 +170,7 @@ function Home() {
                     setPage(1);
                   }}
                 />
-                <span className="ml-2 text-sm text-gray-700">{p.name}</span>
+                <span className="ml-2 text-sm">{p.name}</span>
               </label>
             </div>
           ))}
@@ -188,8 +189,8 @@ function Home() {
           </div>
         </div>
 
-        {/* Product Listing */}
-        <div className="flex-1 flex flex-col  overflow-auto" style={{ minHeight: '600px' }}>
+        {/* mobile filter */}
+        <div className={`flex-1 flex flex-col  overflow-auto" style={{ minHeight: '600px' }} ${isDark ? 'bg-black text-white' : 'bg-white text-black'}`}>
           <button
             onClick={() => setShowMobileFilter(true)}
             className="md:hidden flex items-center gap-1 text-blue-600 mb-4"
@@ -206,26 +207,26 @@ function Home() {
               <>
                 {/* Overlay */}
                 <div
-                  className="fixed inset-0 bg-black bg-opacity-50 z-40"
+                  className={`fixed inset-0 ${isDark ? 'bg-black text-white' : 'bg-white text-black'} bg-opacity-50 z-40`}
                   onClick={() => setShowMobileFilter(false)}
                 />
 
                 {/* Sliding Drawer */}
-                <div className="fixed top-[64px] left-0 w-[80%] max-w-sm h-[calc(100vh-64px)] bg-white z-50 shadow-xl rounded-tr-2xl rounded-br-2xl overflow-y-auto transition-transform duration-300 transform translate-x-0">
+                <div className={`fixed top-[64px] left-0 w-[80%] max-w-sm h-[calc(100vh-64px)] ${isDark ? 'bg-black text-white' : 'bg-white text-black'} z-50 shadow-xl rounded-tr-2xl rounded-br-2xl overflow-y-auto transition-transform duration-300 transform translate-x-0`}>
                   <div className="p-4">
                     {/* Close Button */}
                     <div className="flex justify-between items-center mb-4">
-                      <h2 className="text-lg font-semibold text-gray-800">🔍 Filters</h2>
+                      <h2 className="text-lg font-semibold">🔍 Filters</h2>
                       <button
                         onClick={() => setShowMobileFilter(false)}
-                        className="text-gray-500 hover:text-red-500 text-2xl font-bold"
+                        className="hover:text-red-500 text-2xl font-bold"
                       >
                         &times;
                       </button>
                     </div>
 
                     {/* Filter by Category */}
-                    <h3 className="text-base font-medium mb-2 text-gray-700">🧩 Category</h3>
+                    <h3 className="text-base font-medium mb-2">🧩 Category</h3>
                     {categories.map((cat) => (
                       <div key={cat._id} className="mb-2">
                         <label className="inline-flex items-center">
@@ -235,13 +236,13 @@ function Home() {
                             checked={checked.includes(cat._id)}
                             onClick={(e) => handleFilter(e.target.checked, cat._id)}
                           />
-                          <span className="ml-2 text-sm text-gray-800">{cat.name}</span>
+                          <span className="ml-2 text-sm">{cat.name}</span>
                         </label>
                       </div>
                     ))}
 
                     {/* Filter by Price */}
-                    <h3 className="text-base font-medium mt-6 mb-2 text-gray-700">💰 Price</h3>
+                    <h3 className="text-base font-medium mt-6 mb-2">💰 Price</h3>
                     {Prices.map((p) => (
                       <div key={p._id} className="mb-2">
                         <label className="inline-flex items-center">
@@ -255,7 +256,7 @@ function Home() {
                               setPage(1);
                             }}
                           />
-                          <span className="ml-2 text-sm text-gray-800">{p.name}</span>
+                          <span className="ml-2 text-sm">{p.name}</span>
                         </label>
                       </div>
                     ))}
@@ -279,12 +280,10 @@ function Home() {
               </>
             )}
 
-
-            {/* Desktop View Filter */}
-            <div className={`min-h-[600px] ${loading ? 'flex items-center justify-center' : ''}`}>
+            <div className={`min-h-[600px] ${loading ? 'flex items-center justify-center' : ''} ${isDark ? 'bg-black text-white' : 'bg-white text-black'}`}>
               <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 flex-grow">
                 {products.length === 0 && !loading ? (
-                  <p className="text-gray-500 col-span-full">No products found.</p>
+                  <p className="col-span-full">No products found.</p>
                 ) : (
                   products.map((p) => (
                     <div
@@ -296,10 +295,10 @@ function Home() {
                         <img src={p.photo} alt={p.name} className="w-full h-full object-cover" />
                       </div>
                       <div className="p-3">
-                        <h5 className="text-[14px] md:text-base font-semibold truncate mb-1 text-gray-900">
+                        <h5 className="text-[14px] md:text-base font-semibold truncate mb-1">
                           {p.name}
                         </h5>
-                        <p className="text-[11px] md:text-[12px] truncate mb-1 text-gray-700">
+                        <p className="text-[11px] md:text-[12px] truncate mb-1">
                           {p.description}
                         </p>
 
@@ -337,7 +336,7 @@ function Home() {
           </Spin>
 
           {/* Pagination */}
-          <div className="flex justify-center items-center gap-4 mt-4 py-4 bg-white rounded-lg shadow-md sticky bottom-0 z-10">
+          <div className={`flex justify-center items-center gap-4 mt-4 py-4 ${isDark ? 'bg-black text-white' : 'bg-white text-black'} rounded-lg shadow-md sticky bottom-0 z-10`}>
             <button
               onClick={handlePrev}
               disabled={page === 1}
@@ -347,7 +346,7 @@ function Home() {
               Previous
             </button>
 
-            <span className="text-[14px] font-semibold text-gray-800">Page {page}</span>
+            <span className="text-[14px] font-semibold">Page {page}</span>
 
             <button
               onClick={handleNext}

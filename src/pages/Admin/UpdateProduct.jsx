@@ -5,13 +5,15 @@ import { Select, Button, Spin } from "antd";
 import UseDropzone from '../../components/UploadImageUI/UseDropZone';
 import TextArea from 'antd/es/input/TextArea';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const { Option } = Select;
 
 function UpdateProduct() {
+
     const params = useParams();
     const navigate = useNavigate();
-
+    const isDark = useSelector((state) => state.Theme.dark);
     const [categories, setCategories] = useState([]);
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
@@ -142,7 +144,7 @@ function UpdateProduct() {
     }
 
     return (
-        <div className="space-y-4 p-4">
+        <div className={`space-y-4 ${isDark ? 'bg-black text-white' : 'bg-white text-black'} p-4`}>
             <h2 className="text-xl font-semibold">Update Product</h2>
 
             <Select
@@ -167,7 +169,7 @@ function UpdateProduct() {
                 placeholder="Product Name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-md shadow-sm text-lg font-semibold placeholder-gray-400
+                className="w-full p-3 border text-gray-800 border-gray-300 rounded-md shadow-sm text-lg font-semibold placeholder-gray-400
              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
             />
 
@@ -186,7 +188,7 @@ function UpdateProduct() {
                 placeholder="Price"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                className="w-full p-2 border rounded"
+                className="w-full p-2 text-gray-800 border rounded"
             />
 
             <input
@@ -194,7 +196,7 @@ function UpdateProduct() {
                 placeholder="Quantity"
                 value={quantity}
                 onChange={(e) => setQuantity(e.target.value)}
-                className="w-full p-2 border rounded"
+                className="w-full text-gray-800 p-2 border rounded"
             />
 
             <Select

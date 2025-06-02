@@ -1,7 +1,10 @@
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useRef, useState, useEffect} from 'react';
+import { useSelector } from 'react-redux';
 
 const AdminDashboard = () => {
+
+  const isDark = useSelector((state) => state.Theme.dark);
   const location = useLocation();
   const [sidebarWidth, setSidebarWidth] = useState(280);
   const resizerRef = useRef(null);
@@ -34,10 +37,10 @@ const AdminDashboard = () => {
   const isDefaultProfile = location.pathname === '/dashboard/admin';
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-r from-blue-50 to-purple-50">
+    <div className={`flex min-h-screen bg-gradient-to-r ${isDark ? 'bg-black text-white' : 'bg-white text-black'}`}>
       {/* Sidebar */}
       <div
-        className="bg-white shadow-lg hidden md:flex flex-col p-5 transition-all duration-200 ease-in-out"
+        className={`${isDark ? 'bg-black text-white' : 'bg-white text-gray-800'} shadow-lg hidden md:flex flex-col p-5 transition-all duration-200 ease-in-out`}
         style={{ width: sidebarWidth }}
       >
         <h1 className="text-2xl font-bold text-white bg-gradient-to-r from-blue-600 to-purple-600 p-4 rounded-lg mb-6 text-center shadow">
@@ -51,7 +54,7 @@ const AdminDashboard = () => {
             className={({ isActive }) =>
               `block px-4 py-3 rounded-lg transition-colors font-medium ${isActive || isDefaultProfile
                 ? 'bg-blue-600 text-white shadow-md'
-                : 'text-gray-700 hover:bg-blue-500 hover:text-white'
+                : 'hover:bg-blue-500 hover:text-white'
               }`
             }
           >
@@ -63,7 +66,7 @@ const AdminDashboard = () => {
             className={({ isActive }) =>
               `block px-4 py-3 rounded-lg transition-colors font-medium ${isActive
                 ? 'bg-blue-600 text-white shadow-md'
-                : 'text-gray-700 hover:bg-blue-500 hover:text-white'
+                : 'hover:bg-blue-500 hover:text-white'
               }`
             }
           >
@@ -75,7 +78,7 @@ const AdminDashboard = () => {
             className={({ isActive }) =>
               `block px-4 py-3 rounded-lg transition-colors font-medium ${isActive
                 ? 'bg-blue-600 text-white shadow-md'
-                : 'text-gray-700 hover:bg-blue-500 hover:text-white'
+                : 'hover:bg-blue-500 hover:text-white'
               }`
             }
           >
@@ -87,7 +90,7 @@ const AdminDashboard = () => {
             className={({ isActive }) =>
               `block px-4 py-3 rounded-lg transition-colors font-medium ${isActive
                 ? 'bg-blue-600 text-white shadow-md'
-                : 'text-gray-700 hover:bg-blue-500 hover:text-white'
+                : 'hover:bg-blue-500 hover:text-white'
               }`
             }
           >
@@ -98,7 +101,7 @@ const AdminDashboard = () => {
             className={({ isActive }) =>
               `block px-4 py-3 rounded-lg transition-colors font-medium ${isActive
                 ? 'bg-blue-600 text-white shadow-md'
-                : 'text-gray-700 hover:bg-blue-500 hover:text-white'
+                : 'hover:bg-blue-500 hover:text-white'
               }`
             }
           >
@@ -115,7 +118,7 @@ const AdminDashboard = () => {
       />
 
       {/* Main content */}
-      <div className="flex-1 p-6 bg-white shadow-inner rounded-l-2xl">
+      <div className={`flex-1 p-6 ${isDark ? 'bg-black text-white' : 'bg-white text-black'} shadow-inner rounded-l-2xl`}>
         <Outlet />
       </div>
     </div>

@@ -3,10 +3,13 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { Spin } from 'antd'; // 👈 Add this
+import { useSelector } from 'react-redux';
 
 function Product() {
+
+    const isDark = useSelector((state) => state.Theme.dark);
     const [products, setProducts] = useState([]);
-    const [loading, setLoading] = useState(true); // 👈 Add loading state
+    const [loading, setLoading] = useState(true); // Add loading state
 
     const getProduct = async () => {
         try {
@@ -37,11 +40,11 @@ function Product() {
     }
 
     return (
-        <div className="md:p-6 w-full md:max-w-7xl mx-auto">
+        <div className={`md:p-6 w-full md:max-w-7xl ${isDark ? 'bg-black text-white' : 'bg-white text-black'} mx-auto`}>
             <h2 className="text-3xl font-bold text-blue-800 mb-6">🛍️ All Products</h2>
 
             {products.length === 0 ? (
-                <p className="text-center text-gray-500">No products found.</p>
+                <p className="text-center">No products found.</p>
             ) : (
                 <div className="grid grid-cols-2 sm:grid-col-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {products.map((p) => (
@@ -59,8 +62,8 @@ function Product() {
                                     />
                                 </div>
                                 <div className="p-3">
-                                    <h5 className="text-base font-semibold truncate mb-1 text-gray-900">{p.name}</h5>
-                                    <p className="text-sm text-gray-600 line-clamp-1">{p.description}</p>
+                                    <h5 className="text-base font-semibold truncate mb-1">{p.name}</h5>
+                                    <p className="text-sm line-clamp-1">{p.description}</p>
                                 </div>
                             </div>
                         </Link>

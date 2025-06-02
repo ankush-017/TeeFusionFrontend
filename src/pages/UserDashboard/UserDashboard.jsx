@@ -1,7 +1,10 @@
 import { NavLink, Outlet, Link } from 'react-router-dom';
 import { useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 const UserDashboard = () => {
+
+  const isDark = useSelector((state)=> state.Theme.dark);
 
   const [sidebarWidth, setSidebarWidth] = useState(280);
   const resizerRef = useRef(null);
@@ -28,10 +31,10 @@ const UserDashboard = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-r from-blue-50 to-purple-50">
+    <div className={`flex min-h-screen ${isDark ? 'bg-black text-white' : 'bg-white text-gray-800'}`}>
       {/* Sidebar */}
       <div
-        className="bg-white shadow-lg hidden md:flex flex-col p-5 transition-all duration-200 ease-in-out"
+        className={`${isDark ? 'bg-black text-white' : 'bg-white text-gray-800'} shadow-lg hidden md:flex flex-col p-5 transition-all duration-200 ease-in-out`}
         style={{ width: sidebarWidth }}
       >
         <Link to='/dashboard/user' >
@@ -47,7 +50,7 @@ const UserDashboard = () => {
             className={({ isActive }) =>
               `block px-4 py-3 rounded-lg transition-colors font-medium ${isActive
                 ? 'bg-blue-600 text-white shadow-md'
-                : 'text-gray-700 hover:bg-blue-500 hover:text-white'
+                : ' hover:bg-blue-500 hover:text-white'
               }`
             }
           >
@@ -59,7 +62,7 @@ const UserDashboard = () => {
             className={({ isActive }) =>
               `block px-4 py-3 rounded-lg transition-colors font-medium ${isActive
                 ? 'bg-blue-600 text-white shadow-md'
-                : 'text-gray-700 hover:bg-blue-500 hover:text-white'
+                : 'hover:bg-blue-500 hover:text-white'
               }`
             }
           >
@@ -76,7 +79,7 @@ const UserDashboard = () => {
       />
 
       {/* Main content */}
-      <div className="flex-1 bg-white shadow-inner rounded-l-2xl">
+      <div className={`flex-1 ${isDark ? 'bg-black text-white' : 'bg-white text-gray-800'} shadow-inner rounded-l-2xl`}>
         <Outlet />
       </div>
     </div>

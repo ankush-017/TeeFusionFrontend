@@ -4,6 +4,7 @@ import axios from 'axios';
 import { MdEdit, MdDelete } from "react-icons/md";
 import { Modal } from "antd";
 import CategoryForm from '../../components/CategoryFrom';
+import { useSelector } from 'react-redux';
 
 function CreateCategory() {
 
@@ -117,6 +118,7 @@ function CreateCategory() {
     getCategory();
   }, []);
 
+  const isDark = useSelector((state) => state.Theme.dark);
 
   return (
     <div className='flex-col'>
@@ -128,8 +130,8 @@ function CreateCategory() {
           setValue={setName}
         />
       </div>
-      <div className="overflow-x-auto bg-white shadow-lg rounded-lg">
-        <table className="w-full text-sm text-left text-gray-600">
+      <div className={`overflow-x-auto ${isDark ? 'bg-black text-white' : 'bg-white text-black'} shadow-lg rounded-lg`}>
+        <table className="w-full text-sm text-left">
           <thead className="text-xs text-white uppercase bg-blue-600">
             <tr>
               <th className="px-6 py-4">Category Name</th>
@@ -139,8 +141,8 @@ function CreateCategory() {
           <tbody className="divide-y divide-blue-100">
             {
               category.map((c) => (
-                <tr key={c._id} className="hover:bg-blue-50 transition duration-150">
-                  <td className="px-6 py-4 font-semibold text-gray-800">{`${c.name}`}</td>
+                <tr key={c._id} className={`transition duration-150`}>
+                  <td className="px-6 py-4 font-semibold">{`${c.name}`}</td>
                   <td className="px-6 py-4">
                     <div className="flex justify-center space-x-2">
                       <button onClick={() => {

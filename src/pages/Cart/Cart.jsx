@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 
 function Cart() {
 
+    const isDark = useSelector((state)=> state.Theme.dark);
     const cartItem = useSelector((state) => state.cart.cartItem);
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -155,8 +156,8 @@ function Cart() {
 
 
     return (
-        <div className="min-h-screen bg-gray-100 p-4 md:p-8">
-            <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">Shopping Cart</h1>
+        <div className={`min-h-screen ${isDark ? 'bg-black text-white' : 'bg-white text-black'} p-4 md:p-8`}>
+            <h1 className="text-3xl font-bold text-center mb-8">Shopping Cart</h1>
 
             <div className="grid grid-cols-1 md:grid-cols-9 gap-6">
                 {/* Cart Items */}
@@ -165,7 +166,7 @@ function Cart() {
                         cartItem.map((p) => (
                             <div
                                 key={p._id}
-                                className="bg-white rounded-lg shadow-md p-4 flex flex-col sm:flex-row gap-4 items-center"
+                                className={`${isDark ? 'bg-black text-white shadow-[0_4px_10px_rgba(255,255,255,0.3)]' : 'bg-white text-black shadow-[0_4px_10px_rgba(0,0,0,0.3)]'} rounded-lg shadow-md p-4 flex flex-col sm:flex-row gap-4 items-center`}
                             >
                                 <img
                                     src={p.photo}
@@ -175,22 +176,22 @@ function Cart() {
                                 />
                                 <div className="flex-1 w-full sm:text-left text-center">
                                     <div onClick={() => navigate(`/product-detail/${p.slug}`)} className='flex cursor-pointer flex-col'>
-                                        <h2 className="text-lg font-semibold text-gray-800">{p.name}</h2>
+                                        <h2 className="text-lg font-semibold">{p.name}</h2>
                                         <p className="text-sm text-gray-500 mb-1">{p.description}</p>
                                     </div>
-                                    <div className="flex justify-center sm:justify-start items-center gap-4 mt-2">
+                                    <div className={`flex justify-center sm:justify-start items-center gap-4 mt-2`}>
                                         <div className="flex items-center gap-2">
                                             <span className='font-semibold'>Quantity: </span>
                                             <button
                                                 onClick={() => handleDecrease(p)}
-                                                className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                                                className="px-2 py-1 rounded hover:bg-gray-500"
                                             >
                                                 -
                                             </button>
                                             <span className="font-medium">{p.cartQuantity}</span>
                                             <button
                                                 onClick={() => handleIncrease(p)}
-                                                className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                                                className="px-2 py-1  rounded hover:bg-gray-500"
                                             >
                                                 +
                                             </button>
@@ -221,11 +222,11 @@ function Cart() {
 
                 {/* Cart Summary */}
                 <div className="md:col-span-3">
-                    <div className="mb-6 p-6 bg-white rounded-xl shadow-md flex flex-col items-center space-y-3">
-                        <h2 className="text-lg font-semibold text-gray-800 border-b border-gray-300 pb-2 w-full text-center">
+                    <div className={`${isDark ? 'bg-black text-white shadow-[0_4px_10px_rgba(255,255,255,0.5)]' : 'bg-white text-black shadow-[0_4px_10px_rgba(0,0,0,0.5)]'} mb-6 p-6 rounded-xl shadow-md flex flex-col items-center space-y-3`}>
+                        <h2 className="text-lg font-semibold border-b border-gray-300 pb-2 w-full text-center">
                             Shipping Address
                         </h2>
-                        <p className="text-gray-600 text-center break-words max-w-full px-2">
+                        <p className="text-center break-words max-w-full px-2">
                             {userDetail.address || "No shipping address provided."}
                         </p>
                         <button
@@ -235,17 +236,17 @@ function Cart() {
                             Update Address
                         </button>
                     </div>
-                    <div className="bg-white shadow-md rounded-lg p-6">
-                        <h2 className="text-xl font-semibold mb-4 text-gray-800">Summary</h2>
-                        <div className="flex justify-between mb-2 text-gray-700">
+                    <div className={` ${isDark ? 'bg-black text-white shadow-[0_4px_10px_rgba(255,255,255,0.5)]' : 'bg-white text-gray-800 shadow-[0_4px_10px_rgba(0,0,0,0.5)]'} shadow-md rounded-lg p-6`}>
+                        <h2 className="text-xl font-semibold mb-4 ">Summary</h2>
+                        <div className="flex justify-between mb-2">
                             <span>Subtotal: </span>
                             <span>₹{total}</span>
                         </div>
-                        <div className="flex justify-between text-gray-800">
+                        <div className="flex justify-between">
                             <span>Delivery Charge: </span>
                             <span>₹{deliveryCharge}</span>
                         </div>
-                        <div className="flex justify-between font-semibold mt-3 text-gray-800">
+                        <div className="flex justify-between font-semibold mt-3">
                             <span>Total: </span>
                             <span>₹{total + deliveryCharge}</span>
                         </div>

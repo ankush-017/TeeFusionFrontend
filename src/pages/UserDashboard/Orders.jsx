@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 function Orders() {
+
+  const isDark = useSelector((state)=> state.Theme.dark);
   const [orders, setOrders] = useState([]);
   const token = localStorage.getItem("authToken");
 
@@ -37,21 +40,21 @@ function Orders() {
   };
 
   return (
-    <div className="p-6 overflow-x-hidden">
+    <div className={`p-6 overflow-x-hidden ${isDark ? 'bg-black text-white' : 'bg-white text-gray-800'}`}>
       <h2 className="md:text-3xl text-2xl font-bold text-indigo-700 mb-8 text-center">Your Orders</h2>
 
       {orders.length === 0 ? (
-        <p className="text-center text-gray-500">You haven't placed any orders yet.</p>
+        <p className="text-center">You haven't placed any orders yet.</p>
       ) : (
         orders.map((order) => (
-          <div key={order._id} className="bg-white border flex-col justify-center items-center border-gray-200 rounded-xl p-6 mb-6 shadow-md hover:shadow-lg transition">
+          <div key={order._id} className={`${isDark ? 'bg-black text-white' : 'bg-white text-gray-800'} border flex-col justify-center items-center border-gray-200 rounded-xl p-6 mb-6 shadow-md hover:shadow-lg transition`}>
             <div className="flex flex-wrap justify-between items-center mb-2">
               <h3 className="md:text-lg text-[14px] font-semibold text-indigo-600">Order ID: <span className="text-black">{order._id}</span></h3>
               {getStatusBadge(order.status)}
             </div>
 
-            <p className="text-sm text-gray-700 mb-1"><span className="font-medium">Amount Paid:</span> ₹{order.amount}</p>
-            <p className="text-sm text-gray-700 mb-3"><span className="font-medium">Shipping Address:</span> {order.shippingAddress}</p>
+            <p className="text-sm mb-1"><span className="font-medium">Amount Paid:</span> ₹{order.amount}</p>
+            <p className="text-sm mb-3"><span className="font-medium">Shipping Address:</span> {order.shippingAddress}</p>
 
             <div className="bg-gray-50 p-4 rounded-md border">
               <h4 className="font-semibold mb-2 text-gray-800">Items in this order:</h4>

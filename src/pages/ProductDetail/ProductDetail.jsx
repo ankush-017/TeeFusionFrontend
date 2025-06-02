@@ -4,13 +4,14 @@ import { useParams, useNavigate } from "react-router-dom";
 import { MdOutlineAddShoppingCart } from "react-icons/md";
 import { Spin } from 'antd';
 import { addToCart } from "../../slice/cartSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from 'react-toastify';
 
 const ProductDetail = () => {
 
     const dispatch = useDispatch();
     const params = useParams();
+     const isDark = useSelector((state)=> state.Theme.dark);
     const navigate = useNavigate();
     const [product, setProduct] = useState({});
     const [relatedProducts, setRelatedProducts] = useState([]);
@@ -48,7 +49,8 @@ const ProductDetail = () => {
     };
 
     return (
-        <div className="max-w-6xl mx-auto px-4 py-8 overflow-x-hidden">
+        <div className={`${isDark ? 'bg-black text-white' : 'bg-white text-gray-800'}`}>
+        <div className={`max-w-6xl mx-auto px-4 py-8 overflow-x-hidden`}>
             {/* Product Detail Section */}
             <div className="flex flex-col md:flex-row gap-10 md:items-center justify-center mb-12">
                 {/* Image */}
@@ -63,8 +65,8 @@ const ProductDetail = () => {
                 </div>
                 {/* Product Info */}
                 <div className="flex-1 max-w-xl flex flex-col justify-center h-full">
-                    <h1 className="text-2xl font-bold text-gray-800 mb-3">{product.name}</h1>
-                    <p className="text-gray-700 mb-4">
+                    <h1 className="text-2xl font-bold mb-3">{product.name}</h1>
+                    <p className="mb-4">
                         <span className="font-semibold">Description:</span> {product.description}
                     </p>
 
@@ -75,7 +77,7 @@ const ProductDetail = () => {
                         </span>
                     </div>
 
-                    <p className="text-gray-600 mb-4 font-medium">
+                    <p className="mb-4 font-medium">
                         Category: {product?.category?.name}
                     </p>
 
@@ -95,8 +97,8 @@ const ProductDetail = () => {
 
             {/* Similar Products Section */}
             <Spin spinning={loading} size="large" tip="Loading Products...">
-                <div className="max-w-7xl mx-auto">
-                    <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
+                <div className={`max-w-7xl mx-auto ${isDark ? 'bg-black text-white' : 'bg-white text-black'}`}>
+                    <h2 className="text-2xl font-bold text-center mb-6">
                         Similar Products
                     </h2>
 
@@ -108,20 +110,20 @@ const ProductDetail = () => {
                                 <div
                                     key={p._id}
                                     onClick={() => navigate(`/product-detail/${p.slug}`)}
-                                    className="bg-white cursor-pointer border rounded-lg shadow hover:shadow-lg transition duration-200"
+                                    className="cursor-pointer border rounded-lg  transition duration-200"
                                 >
                                     <div className="w-full h-40 sm:h-48 md:h-60 overflow-hidden">
                                         <img
                                             src={p.photo}
                                             alt={p.name}
-                                            className="w-full h-full object-cover"
+                                            className="w-full h-full rounded-t-lg object-cover"
                                         />
                                     </div>
                                     <div className="p-4">
-                                        <h5 className="text-lg font-semibold text-gray-800 truncate mb-1">
+                                        <h5 className="text-lg font-semibold truncate mb-1">
                                             {p.name}
                                         </h5>
-                                        <p className="text-sm text-gray-600 truncate mb-2">
+                                        <p className="text-sm truncate mb-2">
                                             {p.description}
                                         </p>
 
@@ -155,6 +157,7 @@ const ProductDetail = () => {
                     )}
                 </div>
             </Spin>
+        </div>
         </div>
     );
 };

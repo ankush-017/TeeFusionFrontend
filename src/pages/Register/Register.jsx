@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch , useSelector} from 'react-redux';
 import { login } from '../../slice/authSlice';
 
 function Register() {
@@ -15,6 +15,7 @@ function Register() {
         address: '',
     });
 
+    const isDark = useSelector((state)=> state.Theme.dark);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -56,14 +57,14 @@ function Register() {
 
 
     return (
-        <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 to-blue-100">
+        <div className={`min-h-screen flex flex-col ${isDark ? 'bg-gradient-to-br from-blue-50 to-gray-900 text-white' : 'bg-gradient-to-br from-blue-50 to-blue-100 text-black'}`}>
             <div className="flex-grow flex items-center justify-center px-4 py-10">
-                <div className="w-full max-w-lg bg-white rounded-2xl shadow-2xl p-8 md:p-12">
+                <div className={`w-full max-w-lg ${isDark ? 'bg-black text-white' : 'bg-white text-black'} rounded-2xl shadow-2xl p-8 md:p-12`}>
                     <h2 className="text-3xl font-bold text-center text-blue-700 mb-8">
                         Register for TeeFusion
                     </h2>
 
-                    <form onSubmit={handleSubmit} className="space-y-5">
+                    <form onSubmit={handleSubmit} className="space-y-5 text-gray-800">
                         <input
                             type="text"
                             name="name"
@@ -116,7 +117,7 @@ function Register() {
                         >
                             Register
                         </button>
-                        <p className="text-center text-[16px] md:text-[18px] mt-4">
+                        <p className={`text-center text-[16px] md:text-[18px] mt-4 ${isDark ? 'text-white' : 'text-black'}`}>
                             Already have an account?{" "}
                             <Link
                                 to="/login"

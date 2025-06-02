@@ -14,7 +14,6 @@ import Login from './pages/Login/Login.jsx';
 import { Provider } from 'react-redux';
 import { store } from './store/store.js';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
-import Category from './pages/Category.jsx';
 import Cart from './pages/Cart/Cart.jsx';
 import ForgotPassword from './pages/Login/ForgotPassword.jsx';
 import AdminPrivateRoute from './components/AdminPrivateRoute.jsx';
@@ -29,7 +28,6 @@ import Product from './pages/Admin/Product.jsx';
 import UpdateProduct from './pages/Admin/UpdateProduct.jsx';
 import Search from './pages/Search/Search.jsx'
 import ProductDetail from './pages/ProductDetail/ProductDetail.jsx';
-import Checkout from './pages/CheckOut/Checkout.jsx';
 import UserPanelHome from './pages/UserDashboard/UserPanelHome.jsx';
 import OrdersAdmin from './pages/Admin/OrdersAdmin.jsx';
 
@@ -44,8 +42,6 @@ const router = createBrowserRouter(
 
       {/* Private route implementation  */}
       <Route path="contact" element={<ProtectedRoute> <Contact /> </ProtectedRoute>} />
-      <Route path="category" element={<ProtectedRoute> <Category /> </ProtectedRoute>} />
-      <Route path='checkout' element={<ProtectedRoute> <Checkout /> </ProtectedRoute>} />
       <Route path="dashboard/user" element={<ProtectedRoute><UserDashboard /></ProtectedRoute>}>
         <Route index element={<UserPanelHome />} />
         <Route path="profile" element={<Profile />} />

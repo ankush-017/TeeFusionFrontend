@@ -4,11 +4,12 @@ import { MdOutlineAddShoppingCart } from 'react-icons/md';
 import { Spin } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { addToCart } from '../../slice/cartSlice'
-import { useDispatch } from "react-redux";
+import { useDispatch} from "react-redux";
 import { toast } from 'react-toastify';
 
 function Search() {
   
+  const isDark = useSelector((state)=> state.Theme.dark);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const results = useSelector((state) => state.search.results);
@@ -19,31 +20,31 @@ function Search() {
   }, [results]);
 
   return (
-    <div className="min-h-screen bg-gray-100 py-8 px-4 md:px-8">
+    <div className={`min-h-screen ${isDark ? 'bg-black text-white' : 'bg-white text-gray-800'} py-8 px-4 md:px-8`}>
       <Spin spinning={loading} size="large" tip="Loading Products...">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
+          <h2 className="text-2xl font-bold text-center mb-6">
             Search Results
           </h2>
 
           {results.length === 0 && !loading ? (
-            <p className="text-center text-gray-500 text-lg">No products found.</p>
+            <p className="text-center text-lg">No products found.</p>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {results.map((p) => (
                 <div
                   key={p._id}
                   onClick={() => navigate(`/product-detail/${p.slug}`)}
-                  className="bg-white cursor-pointer border rounded-lg shadow hover:shadow-lg transition duration-200"
+                  className={`${isDark ? 'bg-black text-white' : 'bg-white text-black'} cursor-pointer border rounded-lg shadow hover:shadow-lg transition duration-200`}
                 >
                   <div className="w-full h-40 sm:h-48 md:h-72 overflow-hidden">
-                    <img src={p.photo} alt={p.name} className="w-full h-full object-cover" />
+                    <img src={p.photo} alt={p.name} className="w-full rounded-t-lg h-full object-cover" />
                   </div>
                   <div className="p-4">
-                    <h5 className="text-lg font-semibold text-gray-800 truncate mb-1">
+                    <h5 className="text-lg font-semiboldtruncate mb-1">
                       {p.name}
                     </h5>
-                    <p className="text-sm text-gray-600 truncate mb-2">
+                    <p className="text-sm truncate mb-2">
                       {p.description}
                     </p>
 
