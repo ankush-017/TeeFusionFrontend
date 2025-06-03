@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 
 function Cart() {
 
-    const isDark = useSelector((state)=> state.Theme.dark);
+    const isDark = useSelector((state) => state.Theme.dark);
     const cartItem = useSelector((state) => state.cart.cartItem);
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -124,7 +124,7 @@ function Cart() {
                             }
                         );
 
-                        if(verifyRes?.data?.success){
+                        if (verifyRes?.data?.success) {
                             dispatch(clearCart());
                             toast.success("Payment Completed");
                             navigate("/dashboard/user/orders");
@@ -147,7 +147,7 @@ function Cart() {
 
             const rzp = new window.Razorpay(options);
             rzp.open();
-        } 
+        }
         catch (error) {
             alert("Server error while creating order. Please try again.");
             console.error(error);
@@ -251,8 +251,15 @@ function Cart() {
                             <span>₹{total + deliveryCharge}</span>
                         </div>
                         <button
-                            onClick={handleCheckout}
-                            className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded transition duration-300">
+                            onClick={() => {
+                                if (token) {
+                                    handleCheckout();
+                                } else {
+                                    navigate('/login');
+                                }
+                            }}
+                            className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded transition duration-300"
+                        >
                             Proceed to Checkout
                         </button>
                     </div>
