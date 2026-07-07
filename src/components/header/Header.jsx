@@ -1,375 +1,306 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../slice/authSlice';
 import { toast } from 'react-toastify';
 import SearchInput from '../SearchInput';
 import { Badge } from 'antd';
-import { BsMenuButtonWide } from "react-icons/bs";
-import { MdDarkMode, MdLightMode } from "react-icons/md";
+import { BsMenuButtonWide, BsBagHeart, BsCart3 } from "react-icons/bs";
+import { MdDarkMode, MdLightMode, MdClose, MdAccountCircle, MdDashboard } from "react-icons/md";
 import { toggleTheme } from '../../slice/darkTheme';
 
 const Header = () => {
-
   const isDark = useSelector((state) => state.Theme.dark);
-
   const [isOpen, setIsOpen] = useState(false);
-  const cartItem = useSelector((state) => state.cart.cartItem);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [dashboardOpen, setDashboardOpen] = useState(false);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+
+  const cartItem = useSelector((state) => state.cart.cartItem);
   const { isAuthenticated, user } = useSelector((state) => state.auth);
 
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [selected, setSelected] = useState(user?.name || '');
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const options = ['Dashboard', 'Logout'];
-
-  const handleSelect = (option) => {
-    setSidebarOpen(false);
-    if (option === 'Dashboard') {
-      navigate(`/dashboard/${user?.role === 1 ? 'admin' : 'user'}`);
-    }
-    else if (option === 'Logout') {
-      dispatch(logout());
-      toast.success('Logout Successfully');
-      navigate('/login');
-    }
-  };
-
-  // Close sidebar on outside click
   useEffect(() => {
     const handleOutsideClick = (e) => {
-      if (!e.target.closest('#mobile-sidebar') && !e.target.closest('#menu-button')) {
+      if (sidebarOpen && !e.target.closest('#mobile-sidebar') && !e.target.closest('#menu-button')) {
         setSidebarOpen(false);
       }
     };
-    if (sidebarOpen) {
-      document.addEventListener('mousedown', handleOutsideClick);
-    }
+    document.addEventListener('mousedown', handleOutsideClick);
     return () => document.removeEventListener('mousedown', handleOutsideClick);
   }, [sidebarOpen]);
 
-  useEffect(() => {
-    setSelected(user?.name || '');
-  }, [user]);
+  const handleLogout = () => {
+    dispatch(logout());
+    toast.success('Signed out successfully');
+    navigate('/login');
+    setIsOpen(false);
+  };
+
+  const SidebarLink = ({ to, icon, label, onClick, isDark, badge }) => (
+    <Link
+      to={to}
+      onClick={onClick}
+      className={`flex items-center gap-4 px-6 py-3 text-sm font-medium transition-colors
+      ${isDark
+          ? 'text-zinc-300 hover:bg-zinc-800 hover:text-yellow-400'
+          : 'text-slate-700 hover:bg-blue-50 hover:text-blue-600'}`}
+    >
+      <span className={isDark ? 'text-zinc-500' : 'text-slate-400'}>{icon}</span>
+      <span className="flex-1">{label}</span>
+      {badge > 0 && (
+        <span className="bg-blue-600 dark:bg-yellow-400 text-white dark:text-black text-[10px] font-bold px-2 py-0.5 rounded-full">
+          {badge}
+        </span>
+      )}
+    </Link>
+  );
+
+  const activeLink = "text-blue-700 dark:text-yellow-400 font-bold border-b-4 border-yellow-400 pb-1 transition-all";
+  const normalLink = "text-slate-500 dark:text-slate-400 hover:text-blue-800 dark:hover:text-yellow-400 transition-all duration-200 pb-1";
 
   return (
     <>
-      <nav className={`sticky top-0 z-50 flex md:flex-row flex-col justify-between items-center px-6 py-4
-  ${isDark ? 'bg-black text-white shadow-[0_2px_4px_rgba(255,255,255,0.5)]' : 'bg-white text-black shadow-[0_2px_4px_rgba(0,0,0,0.5)]'}`}>
-        <div className="text-2xl font-bold flex flex-row justify-between w-full md:w-0 mb-2 text-blue-600">
-          <div>
-            <Link to="/" className='text-[28px]'>TeeFusion</Link>
-          </div>
-          <div className='flex md:hidden flex-row gap-5 mt-1'>
-            {/* Dark mode icon kept but non-functional per your request */}
-            <div onClick={() => dispatch(toggleTheme())} className="cursor-pointer">
-              {isDark ? (
-                <MdLightMode size={30} className="text-yellow-300" />
-              ) : (
-                <MdDarkMode size={30} className="text-gray-800" />
-              )}
+      <nav className={`sticky top-0 z-50 px-4 md:px-10 py-4 transition-all duration-500 border-b-2
+        ${isDark
+          ? 'bg-zinc-900 border-yellow-400/20 text-white shadow-2xl'
+          : 'bg-white border-blue-800/10 text-slate-900 shadow-lg'}`}>
+
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-6">
+
+          {/* LOGO - Streetwear Style */}
+          <Link to="/" className="flex items-center space-x-0.5">
+            <span className={`text-3xl font-black tracking-tight px-2 rounded ${isDark ? 'bg-yellow-400 text-black' : 'bg-blue-800 text-white'}`}>
+              TEE
+            </span>
+            <span className={`text-3xl font-black tracking-tight italic ${isDark ? 'text-blue-800' : 'text-yellow-500 '}`}>
+              FUSION
+            </span>
+          </Link>
+
+          {/* SEARCHBAR - Centered & Rounded */}
+          <div className="hidden md:block flex-1 max-w-lg">
+            <div className="relative group">
+              <SearchInput />
+              <div className="absolute inset-0 rounded-lg group-focus-within:ring-2 ring-yellow-400 pointer-events-none transition-all"></div>
             </div>
-
-            {/* Menu button */}
-            <div id="menu-button" onClick={() => setSidebarOpen(true)} className="cursor-pointer">
-              <BsMenuButtonWide size={30} className='text-blue-600' />
-            </div>
-          </div>
-        </div>
-
-        <div className='text-gray-800'>
-          <SearchInput />
-        </div>
-
-        <div className="flex-row gap-5 mt-1">
-          {/* Dark mode icon */}
-          <div onClick={() => dispatch(toggleTheme())} className="cursor-pointer hidden md:flex">
-            {isDark ? (
-              <MdLightMode size={30} className="text-yellow-300" />
-            ) : (
-              <MdDarkMode size={30} className="text-gray-800" />
-            )}
           </div>
 
-          {/* Menu button */}
-          <div id="menu-button" onClick={() => setSidebarOpen(true)} className="cursor-pointer hidden md:flex lg:hidden">
-            {isDark ? (
-              <BsMenuButtonWide size={30} className="text-blue-600" />
-            ) : (
-              <BsMenuButtonWide size={30} className="text-blue-600" />
-            )}
-          </div>
-        </div>
+          {/* RIGHT SIDE ACTIONS */}
+          <div className="flex items-center gap-4">
 
-        <ul className="lg:flex hidden gap-6 mr-4 flex-wrap text-lg font-medium items-center">
-          <li>
-            <NavLink
-              to="/"
-              className={({ isActive }) =>
-                isActive
-                  ? 'text-blue-600 border-b-2 border-blue-600 pb-1'
-                  : 'hover:text-blue-500 transition duration-200'
-              }
-            >
-              Home
-            </NavLink>
-          </li>
+            {/* Desktop Navigation Links */}
+            <ul className="hidden xl:flex items-center gap-8 text-sm font-black uppercase tracking-widest">
+              <li><NavLink to="/" className={({ isActive }) => isActive ? activeLink : normalLink}>Shop</NavLink></li>
+              <li><NavLink to="/about" className={({ isActive }) => isActive ? activeLink : normalLink}>About</NavLink></li>
+              <li>
+                <NavLink to="/cart" className={({ isActive }) => isActive ? activeLink : normalLink}>
+                  <div className="flex items-center gap-2">
+                    <Badge count={cartItem.length} size="small" offset={[2, 0]} color="#1e3a8a">
+                      <BsBagHeart size={22} className={isDark ? 'text-yellow-400' : 'text-blue-800'} />
+                    </Badge>
+                    <span>Cart</span>
+                  </div>
+                </NavLink>
+              </li>
+            </ul>
 
-          <li>
-            <NavLink
-              to="/about"
-              className={({ isActive }) =>
-                isActive
-                  ? 'text-blue-600 border-b-2 border-blue-600 pb-1'
-                  : 'hover:text-blue-500 transition duration-200'
-              }
-            >
-              About
-            </NavLink>
-          </li>
-
-          <li>
-            <Badge
-              count={cartItem.length || 0}
-              offset={[5, 0]}
-              style={{
-                backgroundColor: '#ef4444',
-                color: 'white',
-                boxShadow: '0 0 0 1px white',
-                fontWeight: 'bold',
-              }}
-            >
-              <NavLink
-                to="/cart"
-                className={({ isActive }) =>
-                  `inline-block text-lg border-b-2 transition duration-200 ${isActive
-                    ? 'text-blue-600 border-blue-600'
-                    : 'border-transparent hover:text-blue-500'
-                  } ${isDark ? 'bg-black text-white' : 'bg-white text-black'}`
-                }
-              >
-                Cart
-              </NavLink>
-            </Badge>
-          </li>
-
-          {isAuthenticated ? (
-            <div className="relative inline-block text-left">
+            <div className={`flex items-center gap-2 md:gap-4 pl-4 border-l transition-colors duration-300 ${isDark ? 'border-zinc-700' : 'border-blue-100'}`}>
               <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                onClick={() => dispatch(toggleTheme())}
+                className={`p-2 rounded-lg transition-all ${isDark ? 'bg-zinc-800 text-yellow-400' : 'bg-slate-100 text-blue-800'}`}
               >
-                {user?.name || 'Profile'} ▼
+                {isDark ? <MdLightMode size={20} /> : <MdDarkMode size={20} />}
               </button>
 
-              {isOpen && (
-                <div className="absolute right-0 mt-2 w-40 bg-white border rounded shadow-lg z-10">
-                  <a
-                    href={user.role == 0 ? '/dashboard/user' : '/dashboard/admin'}
-                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  >
-                    Dashboard
-                  </a>
+              {/* Profile / Auth Section */}
+              {isAuthenticated ? (
+                <div className="relative md:block hidden">
                   <button
-                    onClick={() => {
-                      // Replace with your actual logout logic
-                      dispatch(logout());
-                      toast.success("Logout Successfully");
-                      setIsOpen(false); // Close menu after action
-                    }}
-                    className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    onClick={() => setIsOpen(!isOpen)}
+                    className={`flex items-center gap-3 px-1 py-1 rounded-full shadow-md border transition-all duration-200 hover:scale-105 ${isDark
+                      ? "bg-zinc-800 border-yellow-400 text-white hover:bg-zinc-700"
+                      : "bg-white border-blue-700 text-gray-800 hover:bg-blue-50"
+                      }`}
                   >
-                    Logout
+                    {/* Avatar */}
+                    <div
+                      className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${isDark
+                        ? "bg-yellow-400 text-black"
+                        : "bg-blue-700 text-white"
+                        }`}
+                    >
+                      {user?.name?.charAt(0).toUpperCase()}
+                    </div>
+
+                    {/* Welcome Text */}
+                    <span
+                      className={`hidden sm:block text-sm font-semibold ${isDark ? "text-white" : "text-gray-900"
+                        }`}
+                    >
+                      Welcome, {user?.name?.split(" ")[0]}
+                    </span>
+
+                    {/* Arrow */}
+                    <svg
+                      className={`w-4 h-4 transition-transform ${isOpen ? "rotate-180" : ""
+                        } ${isDark ? "text-yellow-400" : "text-blue-700"}`}
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
                   </button>
+
+                  {isOpen && (
+                    <div
+                      className={`absolute right-0 mt-4 w-52 rounded-2xl shadow-2xl border-2 overflow-hidden z-50 ${isDark
+                        ? "bg-zinc-800 border-yellow-400"
+                        : "bg-white border-blue-800"
+                        }`}
+                    >
+                      <Link
+                        to={user.role === 1 ? "/dashboard/admin" : "/dashboard/user"}
+                        className={`flex items-center gap-2 px-4 py-3 text-sm font-bold transition ${isDark
+                          ? "bg-zinc-700 text-white hover:bg-zinc-600"
+                          : "bg-yellow-50 text-black hover:bg-yellow-400/10"
+                          }`}
+                        onClick={() => setIsOpen(false)}
+                      >
+                        <MdAccountCircle size={18} />
+                        My Dashboard
+                      </Link>
+
+                      <button
+                        onClick={handleLogout}
+                        className={`w-full text-left px-4 py-3 text-sm font-bold transition border-t ${isDark
+                          ? "text-red-400 border-zinc-700 hover:bg-zinc-700"
+                          : "text-red-600 border-gray-200 hover:bg-red-50"
+                          }`}
+                      >
+                        Sign Out
+                      </button>
+                    </div>
+                  )}
                 </div>
+              ) : (
+                <Link to="/login" className="px-6 py-2.5 rounded-lg bg-blue-800 dark:bg-yellow-400 text-white dark:text-black text-xs font-black uppercase tracking-tighter hover:scale-105 transition active:scale-95 shadow-[4px_4px_0px_0px_rgba(253,224,71,1)] dark:shadow-[4px_4px_0px_0px_rgba(30,58,138,1)]">
+                  Join Now
+                </Link>
               )}
-            </div>
-          ) : (
-            <li>
-              <NavLink
-                to="/login"
-                className={({ isActive }) =>
-                  isActive
-                    ? 'text-blue-600 border-b-2 border-blue-600 pb-1'
-                    : 'hover:text-blue-500 transition duration-200'
-                }
+
+              {/* Burger Menu for Mobile */}
+              <button
+                id="menu-button"
+                onClick={() => setSidebarOpen(true)}
+                className="xl:hidden p-2 rounded-lg transition-all duration-200 hover:bg-gray-100"
               >
-                Login
-              </NavLink>
-            </li>
-          )}
-        </ul>
+                <BsMenuButtonWide
+                  size={26}
+                  className={isDark ? "text-yellow-400" : "text-blue-800"}
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Search Row */}
+        <div className="md:hidden mt-4">
+          <SearchInput />
+        </div>
       </nav>
 
-      {/* Mobile Sidebar */}
+      {/* MOBILE DRAWER */}
       <div
         id="mobile-sidebar"
-        className={`fixed top-0 right-0 h-full w-64 shadow-lg z-50 transform transition-transform duration-300 ease-in-out
-    ${isDark ? 'bg-black text-white' : 'bg-white text-black'}
-    ${sidebarOpen ? 'translate-x-0' : 'translate-x-full'}`}
+        className={`fixed top-0 left-0 h-full w-[280px] z-[70] transform transition-transform duration-300 ease-in-out shadow-2xl
+    ${isDark ? 'bg-zinc-900' : 'bg-white'}
+    ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
-
-        <div className="flex justify-between items-center px-6 py-4 border-b">
-          <h2 className="text-xl font-bold text-blue-600">Menu</h2>
-          <button
-            onClick={() => setSidebarOpen(false)}
-            className="text-gray-600 hover:text-gray-900 text-2xl font-bold"
-            aria-label="Close menu"
-          >
-            &times;
+        {/* Professional Header - Dark Blue (Light Mode) or Zinc (Dark Mode) */}
+        <div className={`flex items-center gap-3 p-4 ${isDark ? 'bg-zinc-800 text-white' : 'bg-blue-600 text-white'}`}>
+          <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+            <MdAccountCircle size={28} />
+          </div>
+          <div className="flex-1">
+            <p className="text-xs opacity-80">Welcome,</p>
+            <p className="text-sm font-bold uppercase tracking-wide">
+              {isAuthenticated ? user?.name : 'Guest User'}
+            </p>
+          </div>
+          <button onClick={() => setSidebarOpen(false)} className="hover:rotate-90 transition-transform">
+            <MdClose size={24} />
           </button>
         </div>
 
-        <nav className="flex flex-col px-6 py-4 space-y-4 text-lg font-medium">
-          <NavLink
+        <nav className="flex flex-col py-2">
+          {/* Navigation Items */}
+          <SidebarLink
             to="/"
+            icon={<BsBagHeart size={20} />}
+            label="Shop"
             onClick={() => setSidebarOpen(false)}
-            className={({ isActive }) =>
-              isActive
-                ? 'text-blue-600 border-l-4 border-blue-600 pl-2'
-                : 'hover:text-blue-500 transition duration-200'
-            }
-          >
-            Home
-          </NavLink>
-
-          <NavLink
-            to="/about"
-            onClick={() => setSidebarOpen(false)}
-            className={({ isActive }) =>
-              isActive
-                ? 'text-blue-600 border-l-4 border-blue-600 pl-2'
-                : 'hover:text-blue-500 transition duration-200'
-            }
-          >
-            About
-          </NavLink>
-
-          <NavLink
+            isDark={isDark}
+          />
+          <SidebarLink
             to="/cart"
+            icon={<BsCart3 size={20} />}
+            label="My Cart"
+            badge={cartItem.length}
             onClick={() => setSidebarOpen(false)}
-            className={({ isActive }) =>
-              isActive
-                ? 'text-blue-600 border-l-4 border-blue-600 pl-2 flex items-center gap-2'
-                : 'hover:text-blue-500 transition duration-200 flex items-center gap-2'
-            }
-          >
-            Cart
-            <Badge
-              count={cartItem.length || 0}
-              style={{ backgroundColor: '#ef4444', color: 'white', fontWeight: 'bold' }}
-            />
-          </NavLink>
+            isDark={isDark}
+          />
+          <SidebarLink
+            to="/about"
+            icon={<MdAccountCircle size={20} />}
+            label="About & Privacy"
+            onClick={() => setSidebarOpen(false)}
+            isDark={isDark}
+          />
+
+          <div className="h-[1px] bg-slate-100 dark:bg-zinc-800 my-2 mx-4" />
+
+          {/* Account Section */}
+          <p className="px-6 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">My Account</p>
 
           {isAuthenticated ? (
             <>
-              {/* Dashboard with expandable submenu */}
-              <div>
-                <button
-                  onClick={() => setDashboardOpen(prev => !prev)}
-                  className="text-left w-full hover:text-blue-500 transition duration-200"
-                >
-                  Dashboard ▾
-                </button>
-                {dashboardOpen && user?.role !== 1 && (
-                  <div className="ml-4 mt-2 flex flex-col space-y-2 text-base">
-                    <NavLink
-                      to={`/dashboard/user`}
-                      onClick={() => setSidebarOpen(false)}
-                      className="hover:text-blue-500"
-                    >
-                      User Panel
-                    </NavLink>
-                    <NavLink
-                      to="/dashboard/user/profile"
-                      onClick={() => setSidebarOpen(false)}
-                      className="hover:text-blue-500"
-                    >
-                      Profile
-                    </NavLink>
-                    <NavLink
-                      to="/dashboard/user/orders"
-                      onClick={() => setSidebarOpen(false)}
-                      className="hover:text-blue-500"
-                    >
-                      Orders
-                    </NavLink>
-                  </div>
-                )}
-                {dashboardOpen && user?.role === 1 && (
-                  <div className="ml-4 mt-2 flex flex-col space-y-2 text-base">
-                    <NavLink
-                      to={`/dashboard/admin/create-category`}
-                      onClick={() => setSidebarOpen(false)}
-                      className="hover:text-blue-500"
-                    >
-                      Create Category
-                    </NavLink>
-                    <NavLink
-                      to="/dashboard/admin/create-product"
-                      onClick={() => setSidebarOpen(false)}
-                      className="hover:text-blue-500"
-                    >
-                      Create Product
-                    </NavLink>
-                    <NavLink
-                      to="/dashboard/admin/product"
-                      onClick={() => setSidebarOpen(false)}
-                      className="hover:text-blue-500"
-                    >
-                      Products
-                    </NavLink>
-                    <NavLink
-                      to="/dashboard/admin/adminorder"
-                      onClick={() => setSidebarOpen(false)}
-                      className="hover:text-blue-500"
-                    >
-                      Orders
-                    </NavLink>
-                    <NavLink
-                      to="/dashboard/admin/user"
-                      onClick={() => setSidebarOpen(false)}
-                      className="hover:text-blue-500"
-                    >
-                      Users
-                    </NavLink>
-                  </div>
-                )}
-              </div>
-
-              {/* Logout */}
+              <SidebarLink
+                to="/dashboard/user"
+                icon={<MdDashboard size={20} />}
+                label="Dashboard"
+                onClick={() => setSidebarOpen(false)}
+                isDark={isDark}
+              />
               <button
-                onClick={() => handleSelect('Logout')}
-                className="text-left text-red-600 hover:text-red-800 transition duration-200 mt-2"
+                onClick={handleLogout}
+                className="flex items-center gap-4 px-6 py-3 text-sm font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors"
               >
                 Logout
               </button>
             </>
           ) : (
-            <NavLink
+            <Link
               to="/login"
               onClick={() => setSidebarOpen(false)}
-              className={({ isActive }) =>
-                isActive
-                  ? 'text-blue-600 border-l-4 border-blue-600 pl-2'
-                  : 'hover:text-blue-500 transition duration-200'
-              }
+              className="mx-6 my-2 py-2.5 bg-blue-600 dark:bg-yellow-400 text-white dark:text-black text-center text-sm font-bold rounded-sm shadow-sm"
             >
-              Login
-            </NavLink>
+              Sign In / Join Now
+            </Link>
           )}
         </nav>
       </div>
 
-      {/* Overlay when sidebar is open */}
+      {/* BLUR OVERLAY */}
       {sidebarOpen && (
-        <div
-          onClick={() => setSidebarOpen(false)}
-          className="fixed inset-0 bg-black bg-opacity-30 z-40"
-          aria-hidden="true"
-        ></div>
+        <div onClick={() => setSidebarOpen(false)} className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[65] transition-all" />
       )}
     </>
   );
